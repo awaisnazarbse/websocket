@@ -14,7 +14,7 @@ const wss = new WebSocket.Server({ server });
 
 // Set up a route in Express to serve your HTML page or any other assets
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.send("server running");
 });
 
 // Set up the WebSocket server event handlers
