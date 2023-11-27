@@ -2,12 +2,15 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
+const  { Telegraf} = require('telegraf');
 
 // Create an Express app
 const app = express();
 
 // Create an HTTP server and integrate it with the Express app
 const server = http.createServer(app);
+
+const bot = new Telegraf('6297816480:AAHRovrvmvSfmq-18CoMVBcyP12eF6pYDdo');
 
 // Create a WebSocket server and attach it to the HTTP server
 const wss = new WebSocket.Server({ server });
@@ -38,6 +41,25 @@ wss.on('connection', (ws) => {
     console.log('Client disconnected');
   });
 });
+
+bot.use(async (ctx, next) => {
+  const user = ctx?.message;
+  console.log({user})
+  console.time(`Processing update ${ctx.update.update_id}`);
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      if(user !== undefined) {
+      client.send(JSON.stringify(user));
+    }
+    }
+  });
+  await next() // runs next middleware
+  // runs after next middleware finishes
+  console.timeEnd(`Processing update ${ctx.update.update_id}`);
+})
+
+// bot.on(message('text'), (ctx) => ctx.reply('Hello World'));
+bot.launch();
 
 // Start the server on port 3000
 const PORT = process.env.PORT || 3000;
