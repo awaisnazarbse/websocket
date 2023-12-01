@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc ./index.ts --outDir build",
+    "build": "./index.js --outDir build",
     "start": "node ./build/index.js",
     "start:dev": "npm run build && npm run start"
   },
